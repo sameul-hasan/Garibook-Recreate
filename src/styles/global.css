@@ -1,0 +1,148 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------
+   Design tokens — sampled from the Garibook production stylesheet.
+   Exposed to Tailwind so they work as utilities: bg-gb-primary,
+   text-display, max-w-gb, ease-gb, animate-city, …
+   --------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  /* The reference site's Bangla typeface, served from /public/fonts. */
+  --font-bangla: 'Li Ador Noirrit', 'Noto Sans Bengali', var(--font-sans);
+
+  /* brand */
+  --color-gb-primary: #0e52ff;
+  --color-gb-primary-dark: #0038c4;
+  --color-gb-primary-soft: #f5f8ff;
+  --color-gb-primary-tint: #f1f6ff;
+  --color-gb-yellow: #fdd300;
+  --color-gb-yellow-dark: #e6c003;
+  --color-gb-yellow-text: #efc30c;
+
+  /* neutrals */
+  --color-gb-ink: #121212;
+  --color-gb-ink-2: #212121;
+  --color-gb-muted: #6d6d6d;
+  --color-gb-muted-2: #9d9d9d;
+  --color-gb-border: #e9e9e9;
+
+  /* fluid type scale — scales smoothly instead of jumping at breakpoints */
+  --text-display: clamp(2rem, 1rem + 4.4vw, 4rem); /* 32 -> 64 */
+  --text-display--line-height: 1.12;
+  --text-heading: clamp(2rem, 1.2rem + 2.6vw, 3rem); /* 32 -> 48 */
+  --text-heading--line-height: 1.12;
+  --text-title: clamp(1.4rem, 1.1rem + 0.9vw, 2rem); /* 22 -> 32 */
+  --text-title--line-height: 1.2;
+  --text-subhead: clamp(1rem, 0.85rem + 0.6vw, 1.5rem); /* 16 -> 24 */
+  --text-subhead--line-height: 1.35;
+  --text-lead: clamp(1.15rem, 0.9rem + 0.9vw, 1.75rem); /* 18 -> 28 */
+  --text-lead--line-height: 1.2;
+  --text-stat: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem); /* 28 -> 40 */
+  --text-stat--line-height: 1.1;
+
+  /* layout */
+  --container-gb: 1320px;
+
+  /* motion */
+  --ease-gb: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-city: gb-move-city 30s linear infinite;
+  --animate-blink: gb-blink 1s step-end infinite;
+  --animate-slide-down: gb-slide-down 0.45s var(--ease-gb);
+
+  @keyframes gb-move-city {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-25%);
+    }
+  }
+
+  @keyframes gb-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes gb-slide-down {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ---- Li Ador Noirrit: the Bangla face used by garibook.com ---- */
+@font-face {
+  font-family: 'Li Ador Noirrit';
+  src: url('/fonts/Li-Ador-Noirrit-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Li Ador Noirrit';
+  src: url('/fonts/Li-Ador-Noirrit-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Li Ador Noirrit';
+  src: url('/fonts/Li-Ador-Noirrit-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Li Ador Noirrit';
+  src: url('/fonts/Li-Ador-Noirrit-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Whole page in Bangla, plus `.bangla` for a single Bangla item (a news
+     card or blog post) sitting inside the English page — exactly how the
+     reference site tags its mixed-language content. */
+  html[data-lang='bn'] body,
+  .bangla {
+    font-family: var(--font-bangla);
+  }
+
+  body {
+    @apply font-sans text-base text-gb-ink bg-white antialiased overflow-x-hidden;
+  }
+
+  :focus-visible {
+    @apply outline-3 outline-offset-[3px] outline-gb-primary rounded-sm;
+  }
+}
+
+/* Honour the OS reduced-motion preference for every transition on the page. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* The booking widget's select chevron. Lives here rather than as an arbitrary
+   background-image utility, because the inline SVG contains spaces and quotes
+   that Tailwind's class scanner cannot parse. */
+@utility select-chevron {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23121212' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M5 9l7 7 7-7'/%3E%3C/svg%3E");
+  background-position: right 4px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+}
